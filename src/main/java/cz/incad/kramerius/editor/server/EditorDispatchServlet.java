@@ -18,8 +18,10 @@
 package cz.incad.kramerius.editor.server;
 
 import com.google.inject.Injector;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+
 import net.customware.gwt.dispatch.server.BatchActionHandler;
 import net.customware.gwt.dispatch.server.DefaultActionHandlerRegistry;
 import net.customware.gwt.dispatch.server.Dispatch;
@@ -48,6 +50,9 @@ public final class EditorDispatchServlet extends AbstractStandardDispatchServlet
                 injector.getInstance(GetKrameriusObjectQueryHandler.class);
         handlerRegistry.addHandler(getContainerHandler);
 
+        GetTabtitlesQueryHandler getTabtitlesQueryHandler = injector.getInstance(GetTabtitlesQueryHandler.class);
+        handlerRegistry.addHandler(getTabtitlesQueryHandler);
+        
         SaveRelationsQueryHandler saveRelationsQueryHandler =
                 injector.getInstance(SaveRelationsQueryHandler.class);
         handlerRegistry.addHandler(saveRelationsQueryHandler);

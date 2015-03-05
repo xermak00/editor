@@ -35,6 +35,12 @@ public interface ElementView extends Display {
 
     void setLabel(String s);
     
+    void setRootTitle(String s);
+    
+    void setDetail(String d);
+    
+    void setModel(String d);
+    
     void setTooltip(String s);
 
     void setCallback(Callback c);

@@ -20,16 +20,22 @@ package cz.incad.kramerius.editor.client.presenter;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Widget;
+
 import cz.incad.kramerius.editor.client.view.ContainerView;
 import cz.incad.kramerius.editor.client.view.EditorViewsFactory;
 import cz.incad.kramerius.editor.client.view.RelationsView;
 import cz.incad.kramerius.editor.client.view.RelationsView.RelationTab;
 import cz.incad.kramerius.editor.share.GWTKrameriusObject;
+import cz.incad.kramerius.editor.share.GWTKrameriusObject.Kind;
 import cz.incad.kramerius.editor.share.GWTRelationKindModel;
 import cz.incad.kramerius.editor.share.GWTRelationModel;
+
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,6 +43,8 @@ import java.util.Map;
  */
 public final class RelationsPresenter implements Presenter, RelationsView.Callback {
 
+    public static final Logger LOGGER = Logger.getLogger("cz.incad.kramerius.editor.client.presenter.RelationsPresenter");
+    
     private final RelationsView display;
     private GWTRelationModel model;
     private final RelKindModelChangeHandler relKindModelHandler;
@@ -44,7 +52,7 @@ public final class RelationsPresenter implements Presenter, RelationsView.Callba
     private Map<GWTRelationKindModel, RelationsView.RelationTab> model2View;
     private boolean isBound = false;
     private final EditorPresenter ebus;
-
+    
     public RelationsPresenter(RelationsView display, EditorPresenter ebus) {
         this.display = display;
         this.ebus = ebus;

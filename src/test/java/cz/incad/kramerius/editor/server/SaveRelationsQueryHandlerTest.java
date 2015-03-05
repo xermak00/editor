@@ -19,6 +19,7 @@ package cz.incad.kramerius.editor.server;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
 import cz.incad.kramerius.KrameriusModels;
 import cz.incad.kramerius.editor.server.HandlerTestUtils.GWTKrameriusObjectBuilder;
 import cz.incad.kramerius.editor.server.HandlerTestUtils.RelationModelBuilder;
@@ -29,8 +30,13 @@ import cz.incad.kramerius.editor.share.rpc.SaveRelationsQuery;
 import cz.incad.kramerius.editor.share.rpc.SaveRelationsResult;
 import cz.incad.kramerius.relation.RelationModel;
 import cz.incad.kramerius.relation.RelationService;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+
 import net.customware.gwt.dispatch.server.ExecutionContext;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.After;
@@ -38,6 +44,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -122,7 +129,10 @@ public class SaveRelationsQueryHandlerTest {
                 .addRelations(KrameriusModels.MONOGRAPHUNIT, unitPid1)
                 .toInstance();
 
-        GWTKrameriusObject expGkobj = new GWTKrameriusObjectBuilder(pid, Kind.MONOGRAPH, title)
+        Map<String, String> props = new HashMap<String, String>();
+        props.put("title", title);
+        
+        GWTKrameriusObject expGkobj = new GWTKrameriusObjectBuilder(pid, Kind.MONOGRAPH, props)
                 .addRelations(Kind.PAGE, pagePid1, pageTitle1, pagePid2, pageTitle2)
                 .addRelations(Kind.MONOGRAPH_UNIT, unitPid1, unitTitle1)
                 .toInstance();

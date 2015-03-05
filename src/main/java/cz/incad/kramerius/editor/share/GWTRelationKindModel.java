@@ -22,10 +22,13 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+
 import cz.incad.kramerius.editor.share.GWTKrameriusObject.Kind;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -43,7 +46,7 @@ public final class GWTRelationKindModel implements HasValueChangeHandlers<GWTRel
     private static GWTKrameriusObject initClipboard() {
         EnumMap<Kind, List<GWTKrameriusObject>> map = new EnumMap<Kind, List<GWTKrameriusObject>>(Kind.class);
         map.put(Kind.ALL, new ArrayList<GWTKrameriusObject>());
-        return new GWTKrameriusObject("clipboard", Kind.ALL, "Clipboard", map);
+        return new GWTKrameriusObject("clipboard", Kind.ALL, /*"Clipboard"*/ new HashMap<String, String>(), map);
     }
 
     public GWTRelationKindModel() {

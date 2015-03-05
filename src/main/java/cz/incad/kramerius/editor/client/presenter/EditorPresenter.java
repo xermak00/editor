@@ -49,6 +49,8 @@ import cz.incad.kramerius.editor.share.rpc.GetKrameriusObjectResult;
 import cz.incad.kramerius.editor.share.rpc.GetSuggestionQuery;
 import cz.incad.kramerius.editor.share.rpc.GetSuggestionResult;
 import cz.incad.kramerius.editor.share.rpc.GetSuggestionResult.Suggestion;
+import cz.incad.kramerius.editor.share.rpc.GetTabstitleQuery;
+import cz.incad.kramerius.editor.share.rpc.GetTabstitleResult;
 import cz.incad.kramerius.editor.share.rpc.SaveRelationsQuery;
 import cz.incad.kramerius.editor.share.rpc.SaveRelationsResult;
 
@@ -99,7 +101,8 @@ public class EditorPresenter implements Presenter, LoadView.Callback, EditorView
             @Override
             public String render(GWTRelationModel model) {
                 GWTKrameriusObject item = model.getKrameriusObject();
-                return item.getTitle();
+                String title = item.getProperties().get("title");
+                return title != null ? title :"notitle";
             }
 
             @Override
@@ -131,8 +134,7 @@ public class EditorPresenter implements Presenter, LoadView.Callback, EditorView
     }
 
     private void load(String pid, final Runnable callback) {
-
-    	// first check if pid is already loaded
+        // first check if pid is already loaded
         for (GWTRelationModel rm : this.relModel2viewMap.keySet()) {
             if (rm.getKrameriusObject().getPID().equals(pid)) {
                 Display relView = this.relModel2viewMap.get(rm);
@@ -165,17 +167,32 @@ public class EditorPresenter implements Presenter, LoadView.Callback, EditorView
 
     }
 
-    private void editRelations(GWTRelationModel relationModel) {
+    private void editRelations(final GWTRelationModel relationModel) {
+        
+        //construct title
+        
         GWTKrameriusObject container = relationModel.getKrameriusObject();
+        //this.dispatcher.
+        String pid = container.getProperties().get("pid");
+
+        String tabsTitle = container.getProperties().get("constructedTitle");
+
+        //GWTKrameriusObject container = relationModel.getKrameriusObject();
         RelationsPresenter relationsPresenter = new RelationsPresenter(
-                EditorViewsFactory.getInstance().createRelationsView(), this);
+                EditorViewsFactory.getInstance().createRelationsView(), EditorPresenter.this);
         RelationsView relView = relationsPresenter.getDisplay();
-        this.display.add(relView, container.getTitle());
+
+        
+        EditorPresenter.this.display.add(relView, tabsTitle);
         relationsPresenter.setModel(relationModel);
-        this.relModel2viewMap.put(relationModel, relView);
-        this.view2PresenterMap.put(relView, relationsPresenter);
+        EditorPresenter.this.relModel2viewMap.put(relationModel, relView);
+        EditorPresenter.this.view2PresenterMap.put(relView, relationsPresenter);
         relationsPresenter.bind();
-        relationModel.addValueChangeHandler(this.relationModelChangeHandler);
+        relationModel.addValueChangeHandler(EditorPresenter.this.relationModelChangeHandler);
+
+        
+        
+
     }
 
     private void save(final List<GWTRelationModel> relModels) {
@@ -218,7 +235,8 @@ public class EditorPresenter implements Presenter, LoadView.Callback, EditorView
                         if (errCount > 1) {
                             err.append(",\n ");
                         }
-                        err.append(kobj.getTitle()).append('(').append(kobj.getPID()).append(')');
+                        String title = kobj.getProperties().get("title");
+                        err.append(title != null ? title : "notitle").append('(').append(kobj.getPID()).append(')');
                         GWT.log(kobj.getPID(), result.getException(i));
                     }
                 }

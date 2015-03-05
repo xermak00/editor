@@ -21,6 +21,7 @@ import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.DragController;
 import com.allen_sauer.gwt.dnd.client.DragEndEvent;
 import com.allen_sauer.gwt.dnd.client.DragHandlerAdapter;
+
 import cz.incad.kramerius.editor.client.view.ContainerView;
 import cz.incad.kramerius.editor.client.view.ContainerView.Callback;
 import cz.incad.kramerius.editor.client.view.DNDManager;
@@ -29,12 +30,15 @@ import cz.incad.kramerius.editor.client.view.DNDManager.SensitiveDropController;
 import cz.incad.kramerius.editor.client.view.EditorViewsFactory;
 import cz.incad.kramerius.editor.share.GWTKrameriusObject;
 import cz.incad.kramerius.editor.share.GWTRelationKindModel;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+
 
 /**
  * Generic container able to present list of Kramerius objects. It implements
@@ -44,6 +48,8 @@ import java.util.Map;
  */
 public class ContainerPresenter implements Presenter, Callback {
 
+    public static Logger LOGGER = Logger.getLogger("cz.incad.kramerius.editor.client.presenter.ContainerPresenter");
+    
     private final ContainerView display;
     private Map<Display, ElementPresenter> view2elmPresenterMap = Collections.emptyMap();
     private final EditorPresenter ebus;
@@ -53,6 +59,7 @@ public class ContainerPresenter implements Presenter, Callback {
     private GWTRelationKindModel model;
     private boolean isBound = false;
 
+    
     public ContainerPresenter(ContainerView display, EditorPresenter ebus) {
         this.display = display;
         this.ebus = ebus;
@@ -65,6 +72,7 @@ public class ContainerPresenter implements Presenter, Callback {
 
     public void setModel(GWTRelationKindModel model) {
         this.model = model;
+        
     }
 
     public void bind() {
@@ -144,6 +152,8 @@ public class ContainerPresenter implements Presenter, Callback {
         List<Display> elmDisplays = new ArrayList<Display>(elms.size());
         view2elmPresenterMap = new LinkedHashMap<Display, ElementPresenter>(elms.size());
         for (GWTKrameriusObject elm : elms) {
+            LOGGER.info("properties for pid "+elm.getPID()+" :"+elm.getProperties().toString());
+            
             ElementPresenter elmPresenter = null;
             elmPresenter = new ElementPresenter(EditorViewsFactory.getInstance().createElementView(), ebus);
             elmPresenter.setModel(elm);

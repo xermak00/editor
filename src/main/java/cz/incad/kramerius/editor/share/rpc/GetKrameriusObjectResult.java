@@ -59,27 +59,27 @@ public class GetKrameriusObjectResult implements Result, IsSerializable {
             relationsMap.put(relKind, relObjects);
             int pos = 0;
             for (Descriptor rd : relDescriptors) {
-                relObjects.add(new GWTKrameriusObject(rd.getUUID(), relKind, ++pos, rd.getName()));
+                relObjects.add(new GWTKrameriusObject(rd.getUUID(), relKind, ++pos, rd.getProperties()));
             }
         }
-        GWTKrameriusObject obj = new GWTKrameriusObject(desc.getUUID(), kind, desc.getName(), relationsMap);
+        GWTKrameriusObject obj = new GWTKrameriusObject(desc.getUUID(), kind, desc.getProperties(), relationsMap);
         return obj;
     }
 
     public static class Descriptor implements IsSerializable {
         private String uuid;
-        private String name;
+        private Map<String,String> properties;
 
         /* gwt serialization purposes */
         private Descriptor() {}
 
-        public Descriptor(String uuid, String name) {
+        public Descriptor(String uuid, Map<String,String> props) {
             this.uuid = uuid;
-            this.name = name;
+            this.properties = props;
         }
 
-        public String getName() {
-            return name;
+        public Map<String,String> getProperties() {
+            return this.properties;
         }
 
         public String getUUID() {

@@ -73,7 +73,7 @@ public final class RemoteServicesImpl implements RemoteServices {
 
     void reindex(String uuid, String title) {
     	// reindexace je nyni pres ajaxcall primo do k4
-    	//IndexerProcessStarter.spawnIndexer(true, title, uuid);
+        //IndexerProcessStarter.spawnIndexer(true, title, uuid);
     }
 
     

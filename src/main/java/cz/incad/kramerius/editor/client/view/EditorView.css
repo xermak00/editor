@@ -44,8 +44,7 @@
     text-decoration: underline;
 }
 .clipboardPanel {
-    background-image: url("./images/clipboard.png");
-    background-repeat: repeat;
+    /* background: url("./images/clipboard.png") no-repeat fixed center; */
 }
 
 @external .gwt-PopupPanel .languageMenuItemCurrent .languageMenuItem;

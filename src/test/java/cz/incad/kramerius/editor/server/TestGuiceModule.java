@@ -37,4 +37,5 @@ public final class TestGuiceModule extends AbstractModule {
         bind(RemoteServices.class).toInstance(EasyMock.createMock(RemoteServices.class));
     }
 
+    
 }

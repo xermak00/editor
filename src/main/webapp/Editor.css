@@ -29,9 +29,11 @@ body, table td, select {
     font-family: Verdana,Arial,Helvetica,Tahoma !important;
     font-size: 12px !important;
 }
+
 .gwt-SplitLayoutPanel-VDragger {
-    background-color: #c76226 /*#8A2D28*/ !important;
+    /*background-color: #c76226  !important;*/
 }
+
 .gwt-DialogBox .Caption {
     background: url(./images/search.img.bg_orange_small.png) repeat-x !important;
     color: white !important;

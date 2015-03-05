@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,12 @@ public final class ElementViewImpl extends Composite implements ElementView, Has
     private PopupPanel popupPanel;
 
     @UiField Image elmImage;
+
     @UiField Label elmLabel;
+    @UiField Label elmModelLabel;
+    @UiField Label elmRootLabel;
+    @UiField Label elmDetail;
+    
     @UiField Anchor elmPreview;
     @UiField Anchor elmOpen;
 
@@ -77,14 +83,32 @@ public final class ElementViewImpl extends Composite implements ElementView, Has
         popupPanel.center();
     }
 
+    
+    
+    @Override
+    public void setRootTitle(String s) {
+        this.elmRootLabel.setText(s);
+    }
+
+    @Override
+    public void setDetail(String d) {
+        this.elmDetail.setText(d);;
+    }
+
     @Override
     public void setLabel(String s) {
         elmLabel.setText(s);
     }
 
     @Override
+    public void setModel(String d) {
+        elmModelLabel.setText(d);
+    }
+
+    @Override
     public void setTooltip(String s) {
-        elmLabel.setTitle(s);
+        //elmLabel.setTitle(s);
+        this.elmImage.setTitle(s);
     }
 
     @Override
@@ -127,6 +151,7 @@ public final class ElementViewImpl extends Composite implements ElementView, Has
         flowPanel.add(preview);
         popupPanel.setWidget(flowPanel);
         preview.setVisible(false);
+        
         preview.addLoadHandler(new LoadHandler() {
 
             @Override

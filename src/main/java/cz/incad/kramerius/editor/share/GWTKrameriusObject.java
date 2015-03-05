@@ -70,25 +70,26 @@ public final class GWTKrameriusObject {
     private int number;
     private String pid;
     private Kind kind;
-    private String title;
+    //private String title;
     private Map<Kind, List<GWTKrameriusObject>> relationsMap;
+    private Map<String,String> properties;
 
     /* gwt serialization purposes; DO NOT USE! */
     GWTKrameriusObject() {}
 
-    public GWTKrameriusObject(String pid, Kind kind, int number, String title) {
-        this(pid, kind, number, title, null);
+    public GWTKrameriusObject(String pid, Kind kind, int number, Map<String,String> properties) {
+        this(pid, kind, number, properties, null);
     }
 
-    public GWTKrameriusObject(String pid, Kind kind, String title, Map<Kind, List<GWTKrameriusObject>> relations) {
-        this(pid, kind, -1, title, relations);
+    public GWTKrameriusObject(String pid, Kind kind, Map<String,String> properties, Map<Kind, List<GWTKrameriusObject>> relations) {
+        this(pid, kind, -1, properties, relations);
     }
 
-    public GWTKrameriusObject(String pid, Kind kind, int number, String title, Map<Kind, List<GWTKrameriusObject>> relations) {
+    public GWTKrameriusObject(String pid, Kind kind, int number, Map<String,String> properties, Map<Kind, List<GWTKrameriusObject>> relations) {
         this.pid = pid;
         this.kind = kind;
         this.number = number;
-        this.title = title;
+        this.properties = properties;
         this.relationsMap = relations;
     }
 
@@ -104,8 +105,8 @@ public final class GWTKrameriusObject {
         return number;
     }
 
-    public String getTitle() {
-        return title;
+    public Map<String,String> getProperties() {
+        return this.properties;
     }
 
     public List<GWTKrameriusObject> getRelations(Kind relationKind) {
@@ -146,7 +147,7 @@ public final class GWTKrameriusObject {
 
     @Override
     public String toString() {
-        return "GWTKO[" + pid + ']';
+        return "GWTKO[" + pid + ']'+this.properties;
     }
 
 }

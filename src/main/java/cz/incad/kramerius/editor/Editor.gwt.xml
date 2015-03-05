@@ -43,6 +43,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <entry-point class="cz.incad.kramerius.editor.client.EditorEntryPoint"/>
   <!-- Do not define servlets here, use web.xml -->
 
+  <!--    
+  <inherits name="com.google.gwt.logging.Logging"/>
+  -->
+
   <source path="client" />
   <source path="share" />
 

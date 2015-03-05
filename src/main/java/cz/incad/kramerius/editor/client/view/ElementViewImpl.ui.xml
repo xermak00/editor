@@ -34,7 +34,13 @@ For i18 stuff see src/main/java/com/google/gwt/i18n/client/LocalizableResource_<
             <g:Image ui:field="elmImage" />
         </g:SimplePanel>
         <g:HorizontalPanel>
-            <g:Label ui:field="elmLabel" />
+
+            <g:VerticalPanel>
+                <g:Label ui:field="elmLabel" />
+                <g:Label ui:field="elmRootLabel" />
+                <g:Label ui:field="elmModelLabel" />
+                <g:Label ui:field="elmDetail" />
+            </g:VerticalPanel>
 
             <g:Anchor ui:field="elmPreview" addStyleNames="ui-icon ui-icon-zoomin"
                     title="Preview" href="javascript:;">

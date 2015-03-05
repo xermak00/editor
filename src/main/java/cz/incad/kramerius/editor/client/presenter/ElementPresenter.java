@@ -17,6 +17,16 @@
 
 package cz.incad.kramerius.editor.client.presenter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.google.gwt.core.client.GWT;
+
+import cz.incad.kramerius.editor.client.EditorConstants;
 import cz.incad.kramerius.editor.client.view.ElementView;
 import cz.incad.kramerius.editor.client.view.ViewUtils;
 import cz.incad.kramerius.editor.share.GWTKrameriusObject;
@@ -28,11 +38,15 @@ import cz.incad.kramerius.editor.share.GWTKrameriusObject.Kind;
  */
 public class ElementPresenter implements Presenter, ElementView.Callback {
 
+
+    public static final Logger LOGGER = Logger.getLogger("cz.incad.kramerius.editor.client.presenter.ElementPresenter");
+    
     private ElementView display;
     private GWTKrameriusObject model;
     private final EditorPresenter ebus;
     private boolean isBound = false;
 
+    
     public ElementPresenter(ElementView display, EditorPresenter bus) {
         this.display = display;
         this.ebus = bus;
@@ -49,8 +63,43 @@ public class ElementPresenter implements Presenter, ElementView.Callback {
         display.setCallback(this);
 
         display.setLocation(model.getLocation());
-        display.setLabel(ViewUtils.makeLabelVisible(model.getTitle(), 15));
-        display.setTooltip(model.getKind().toLocalizedString() + ": " + model.getTitle());
+        String title = model.getProperties().get("title");
+
+        String sermodel = model.getProperties().toString();
+        LOGGER.log(Level.INFO,sermodel );
+        
+        display.setLabel(ViewUtils.makeLabelVisible(title != null ? title : "notitle", 15));
+
+
+        display.setModel(ViewUtils.makeLabelVisible(model.getKind().toLocalizedString(), 15));
+        List<String> prohibited = Arrays.asList("title","rootTitle","model","pid","policy");
+        Set<String> keyset = model.getProperties().keySet();
+        List<String> details = new ArrayList<String>();
+        for (String k : keyset) {
+            if (!prohibited.contains(k)) {
+                details.add(model.getProperties().get(k));
+            }
+        }
+
+        String rootTitle = model.getProperties().get("rootTitle");
+        display.setRootTitle(ViewUtils.makeLabelVisible(rootTitle != null ? rootTitle : "notitle", 15));
+
+        /*
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0,ll=details.size(); i < ll; i++) {
+            if (i > 0) builder.append(",");
+            builder.append(details.get(i));
+        }
+        
+        display.setDetail(builder.toString());
+        */
+     
+        String cTitle = model.getProperties().get("constructedTitle");
+        if (cTitle != null) {
+            display.setTooltip(model.getKind().toLocalizedString() + ": " + title+" ‣ "+cTitle);
+        } else {
+            display.setTooltip(model.getKind().toLocalizedString() + ": " + title);
+        }
         display.setOpenEnabled(model.getKind() != Kind.PAGE);
     }
 

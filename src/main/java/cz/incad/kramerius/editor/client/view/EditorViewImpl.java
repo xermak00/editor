@@ -62,7 +62,7 @@ public final class EditorViewImpl implements EditorView {
     public void add(Display item, String name) {
 //        final ScrollPanel tabContentPanel = new ScrollPanel(item.asWidget());
         Widget tabContentPanel = item.asWidget();
-
+        
         editorTabPanel.add(tabContentPanel, name, true);
         editorTabPanel.selectTab(tabContentPanel);
         tabsModel.add(item);

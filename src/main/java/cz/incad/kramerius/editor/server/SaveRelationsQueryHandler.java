@@ -78,6 +78,7 @@ public final class SaveRelationsQueryHandler implements ActionHandler<SaveRelati
             applyNewRelations(model, queryRelations);
             relationsDAO.save(pid, model);
             remotes.reindex(pid);
+            
             SaveRelationsResult result = new SaveRelationsResult(SaveRelationsState.OK);
             return result;
         } catch (IOException ex) {

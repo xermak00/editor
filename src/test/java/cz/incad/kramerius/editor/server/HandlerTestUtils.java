@@ -23,8 +23,10 @@ import cz.incad.kramerius.editor.share.GWTKrameriusObject.Kind;
 import cz.incad.kramerius.relation.Relation;
 import cz.incad.kramerius.relation.RelationUtils;
 import cz.incad.kramerius.relation.RelationModel;
+
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,14 +36,14 @@ import java.util.Map;
  */
 public class HandlerTestUtils {
 
-    public static GWTKrameriusObjectBuilder createGWTObject(String pid, Kind kind, String title) {
+    public static GWTKrameriusObjectBuilder createGWTObject(String pid, Kind kind, Map<String, String> properties) {
         return new GWTKrameriusObjectBuilder(
                 new GWTKrameriusObject(
-                        pid, kind, title,
+                        pid, kind, properties,
                         new EnumMap<Kind, List<GWTKrameriusObject>>(Kind.class)
                         ));
     }
-    public static GWTKrameriusObject createGWTObject(String pid, Kind kind, String title,
+    public static GWTKrameriusObject createGWTObject(String pid, Kind kind, Map<String, String> properties,
             List<GWTKrameriusObject>... relations) {
 
         Map<Kind, List<GWTKrameriusObject>> relsMap =
@@ -51,8 +53,9 @@ public class HandlerTestUtils {
             List<GWTKrameriusObject> kindRelations = relations[i];
             relsMap.put(kindRelations.get(0).getKind(), kindRelations);
         }
-        return new GWTKrameriusObject(pid, kind, title, null);
+        return new GWTKrameriusObject(pid, kind, properties, null);
     }
+
 
     public static List<GWTKrameriusObject> createGWTRelations(Kind relKind, String... relParams) {
         if (relParams.length % 2 != 0) {
@@ -63,7 +66,9 @@ public class HandlerTestUtils {
         for (int i = 0, length = relParams.length, pos = 1; i < length; pos++) {
             String pid = relParams[i++];
             String title = relParams[i++];
-            objs.add(new GWTKrameriusObject(pid, relKind, pos, title));
+            Map<String, String> properties = new HashMap<String, String>();
+            properties.put("title", title);
+            objs.add(new GWTKrameriusObject(pid, relKind, pos, properties));
         }
         return objs;
     }
@@ -72,8 +77,8 @@ public class HandlerTestUtils {
 
         private GWTKrameriusObject gko;
 
-        public GWTKrameriusObjectBuilder(String pid, Kind kind, String title) {
-            this(new GWTKrameriusObject(pid, kind, title,
+        public GWTKrameriusObjectBuilder(String pid, Kind kind,Map<String, String> properties) {
+            this(new GWTKrameriusObject(pid, kind, properties,
                     new EnumMap<Kind, List<GWTKrameriusObject>>(Kind.class)));
         }
 
@@ -81,10 +86,12 @@ public class HandlerTestUtils {
             this.gko = gko;
         }
 
+        
         public GWTKrameriusObjectBuilder addRelations(Kind relKind, String... relParams) {
             gko.setRelations(relKind, createGWTRelations(relKind, relParams));
             return this;
         }
+        
 
         public GWTKrameriusObject toInstance() {
             return gko;

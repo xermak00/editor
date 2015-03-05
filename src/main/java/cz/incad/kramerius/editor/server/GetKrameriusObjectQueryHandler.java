@@ -19,8 +19,10 @@ package cz.incad.kramerius.editor.server;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
 import cz.incad.kramerius.FedoraAccess;
 import cz.incad.kramerius.KrameriusModels;
+import cz.incad.kramerius.editor.server.utils.ApiUtilsHelp;
 import cz.incad.kramerius.editor.share.GWTKrameriusObject.Kind;
 import cz.incad.kramerius.editor.share.rpc.GetKrameriusObjectQuery;
 import cz.incad.kramerius.editor.share.rpc.GetKrameriusObjectResult;
@@ -28,12 +30,22 @@ import cz.incad.kramerius.editor.share.rpc.GetKrameriusObjectResult.Descriptor;
 import cz.incad.kramerius.relation.Relation;
 import cz.incad.kramerius.relation.RelationModel;
 import cz.incad.kramerius.relation.RelationService;
+import cz.incad.kramerius.utils.StringUtils;
+import cz.incad.kramerius.utils.conf.KConfiguration;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import net.customware.gwt.dispatch.server.ActionHandler;
 import net.customware.gwt.dispatch.server.ExecutionContext;
 import net.customware.gwt.dispatch.shared.ActionException;
@@ -48,7 +60,7 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
     private RelationService relationsDAO;
     private FedoraAccess fedoraAccess;
     private RemoteServices remotes;
-
+    
     @Inject
     public GetKrameriusObjectQueryHandler(
             RelationService dao,
@@ -77,8 +89,8 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
             Logger.getLogger(GetKrameriusObjectQueryHandler.class.getName()).log(Level.SEVERE, null, ex);
             throw new ActionException(ex);
         }
-        Map<String, String> fetchedTitles = fetchTitles(pidTxt, fetchedRelations);
-        GetKrameriusObjectResult result = buildResult(pidTxt, fetchedRelations, fetchedTitles);
+        Map<String, Map<String,String>> fetchedProperties = fetchTitles(pidTxt, fetchedRelations);
+        GetKrameriusObjectResult result = buildResult(pidTxt, fetchedRelations, fetchedProperties);
         return result;
     }
 
@@ -88,17 +100,18 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
     }
 
     private GetKrameriusObjectResult buildResult(
-            String pid, RelationModel rels, Map<String, String> names) {
+            String pid, RelationModel rels, Map<String, Map<String,String>> properties) {
 
-        Descriptor objDescriptor = new Descriptor(pid, names.get(pid));
+        Descriptor objDescriptor = new Descriptor(pid, properties.get(pid));
         Kind objKind = EditorServerUtils.resolveKind(rels.getKind());
-        RelationResult relResult = buildRelationsResult(rels, names);
+        RelationResult relResult = buildRelationsResult(rels, properties);
+
         GetKrameriusObjectResult result = new GetKrameriusObjectResult(
                 objDescriptor, objKind, relResult.relKinds, relResult.relDescriptors);
         return result;
     }
 
-    private RelationResult buildRelationsResult(RelationModel rels, Map<String, String> names) {
+    private RelationResult buildRelationsResult(RelationModel rels, Map<String, Map<String,String>> properties) {
         Kind[] relKinds = new Kind[rels.getRelationKinds().size()];
         Descriptor[][] relDescriptors = new Descriptor[relKinds.length][];
         int kindIdx = 0;
@@ -111,8 +124,10 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
 
             int relIdx = 0;
             for (Relation relation : kindRelations) {
+                String pid = relation.getPID();
+                Map<String, String> relProps = properties.get(pid);
                 kindRelationDesriptors[relIdx++] = new Descriptor(
-                        relation.getPID(), names.get(relation.getPID()));
+                        relation.getPID(), relProps);
             }
         }
 //        result.setRelations(relKinds, relDescriptors);
@@ -136,19 +151,88 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
         return rels;
     }
 
-    private Map<String, String> fetchTitles(String pid, RelationModel rels) throws ActionException {
-        Map<String, String> result = new HashMap<String, String>();
+    private Map<String, Map<String,String>> fetchTitles(String pid, RelationModel rels) throws ActionException {
+        try {
+            Map<String, Map<String, String>> result = new HashMap<String, Map<String,String>>();
 
-        result.put(pid, fetchDCName(pid));
+            JSONObject jsonObj = ApiUtilsHelp.item(pid);
+            String constructedTitle = ApiUtilsHelp.constructTitle(jsonObj);
 
-        for (KrameriusModels relationKind : rels.getRelationKinds()) {
-            for (Relation relation : rels.getRelations(relationKind)) {
-                result.put(relation.getPID(), fetchDCName(relation.getPID()));
+            Map<String, JSONObject> objects = new HashMap<String, JSONObject>();
+            JSONArray jsonArr = ApiUtilsHelp.children(pid);
+            for (int i = 0, ll = jsonArr.length(); i < ll; i++) {
+                JSONObject chJSON = (JSONObject) jsonArr.get(i);
+                objects.put(chJSON.getString("pid"), chJSON);
+            }
+
+            result.put(pid, propertiesJSONObject(jsonObj, constructedTitle));
+            for (KrameriusModels relationKind : rels.getRelationKinds()) {
+                for (Relation relation : rels.getRelations(relationKind)) {
+                    JSONObject jsonObject = objects.get(relation.getPID());
+                    if (jsonObject != null) {
+                        result.put(relation.getPID(), propertiesJSONObject(jsonObject, constructedTitle));
+                    }
+                }
+            }
+            return result;
+        } catch (JSONException e) {
+            throw new ActionException(e);
+        }
+    }
+
+    
+    
+    
+    public static Map<String, String> propertiesJSONObject(JSONObject jsonObj, String constructedTitle) throws JSONException {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("title", jsonObj.getString("title"));
+        map.put("pid", jsonObj.getString("pid"));
+        map.put("policy", jsonObj.getString("policy"));
+        map.put("rootTitle", jsonObj.getString("root_title"));
+        map.put("constructedTitle", constructedTitle);
+        
+        String model = jsonObj.getString("model");
+        map.put("model", model);
+        if (jsonObj.has("details")) {
+            JSONObject detailsJSON = jsonObj.getJSONObject("details");
+            PropertiesFromModels detail = PropertiesFromModels.findDetail(model);
+            if (detail != null) {
+                detail.details(map, detailsJSON);
             }
         }
 
-        return result;
+        if (jsonObj.has("context")) {
+            JSONArray jsonArray = jsonObj.getJSONArray("context");
+            if (jsonArray.length() > 0) {
+                StringBuilder builder = new StringBuilder();
+                JSONArray selArr = jsonArray.getJSONArray(0);
+                for (int i = 0,ll=selArr.length(); i < ll; i++) {
+                    if (i > 0) builder.append(",");
+                    JSONObject value = selArr.getJSONObject(i);
+                    builder.append(value.getString("pid"));
+                }
+                map.put("context", builder.toString());
+            }
+        }
+        return map;
     }
+
+
+
+    private String title(String pid) throws JSONException {
+        String url = KConfiguration.getInstance().getConfiguration().getString("api.point")+"/item/"+pid;
+        Logger.getLogger(GetKrameriusObjectQueryHandler.class.getName()).log(Level.INFO, "URL + "+url);
+        JSONObject jsonObject = ApiUtilsHelp.getJSONasObject(url);
+        String rtitle = jsonObject.getString("root_title");
+        String obj = jsonObject.getString("title");
+        String title = obj;
+        if (StringUtils.isAnyString(rtitle)) {
+            title = rtitle+" " +obj;
+        }
+        Logger.getLogger(GetKrameriusObjectQueryHandler.class.getName()).log(Level.INFO, "Title "+title);
+        return title;
+    }
+    
 
     private String fetchDCName(String pid) throws ActionException {
         try {
@@ -158,5 +242,104 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
             throw new ActionException("The server is out of order.");
         }
     }
+    
+    private static enum PropertiesFromModels {
+
+        page {
+            @Override
+            public void details(Map<String, String> map, JSONObject jsonObject) throws JSONException {
+                List<String> alist = new ArrayList<String>();
+                String title = map.get("title");
+                if (jsonObject.has("pagenumber")) {
+                    String jsonObjTitle = jsonObject.getString("pagenumber");
+                    if (jsonObjTitle != null) {
+                        jsonObjTitle = jsonObjTitle.trim();
+                        if ((title != null) && (!jsonObjTitle.equals(title))) {
+                            alist.add(jsonObjTitle);
+                        }
+                    }
+                }
+
+                if (jsonObject.has("type")) {
+                    String type = jsonObject.getString("type");
+                    type = type.trim();
+                    alist.add(type);
+                }
+                
+                if (!alist.isEmpty()) {
+                    map.put("details", alist.toString());
+                }
+            }
+        },
+
+        periodicalitem {
+
+            @Override
+            public void details(Map<String, String> map, JSONObject jsonObject) throws JSONException {
+
+                if (jsonObject.has("issueNumber")){
+                    String issueNumber = jsonObject.getString("issueNumber");
+                    if (issueNumber != null) {
+                        issueNumber = issueNumber.trim();
+                        if (!issueNumber.equals("")) {
+                            map.put("issueNumber", issueNumber);
+                        }
+                    }
+                }
+
+                if (jsonObject.has("date")){
+                    String date = jsonObject.getString("date");
+                    if (date != null) {
+                        date = date.trim();
+                        if (!date.equals("")) {
+                            map.put("date", date);
+                        }
+                    }
+                }
+
+                if (jsonObject.has("partNumber")){
+                    String partNumber = jsonObject.getString("partNumber");
+                    if (partNumber != null) {
+                        partNumber = partNumber.trim();
+                        if (!partNumber.equals("")) {
+                            map.put("partNumber", partNumber);
+                        }
+                    }
+                }
+            }
+
+        },
+        
+        periodicalvolume {
+            @Override
+            public void details(Map<String, String> map, JSONObject jsonObject) throws JSONException {
+                if (jsonObject.has("year")){
+                    String year = jsonObject.getString("year");
+                    if (year != null) {
+                        year = year.trim();
+                        if (!year.equals("")) {
+                            map.put("year", year);
+                        }
+                    }
+                }
+            }
+
+            
+        };
+
+        public abstract void details(Map<String, String> map, JSONObject jsonObject) throws JSONException;
+
+        
+        public static PropertiesFromModels findDetail(String model) {
+            PropertiesFromModels[] values = PropertiesFromModels.values();
+            for (PropertiesFromModels detail : values) {
+                if (detail.name().equals(model)) {
+                    return detail;
+                }
+            }
+            return null;
+        }
+    }
+
 
 }

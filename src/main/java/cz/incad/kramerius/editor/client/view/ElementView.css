@@ -16,13 +16,14 @@
  */
 
 .thumbnail {
-    width: 90px;
+    /*width: 90px;*/
     height: 128px;
     text-align: center;
 }
 .elementPanel {
     display: inline-block;
-    background: burlywood;
-    border: solid burlywood;
+    background: rgba(14, 112, 179, 0.3);
+    border: 2px solid rgba(14, 112, 179, 0.3);
     margin: 2px 2px;
+    padding-top: 2px;
 }
