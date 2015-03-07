@@ -247,7 +247,7 @@ public class EditorPresenter implements Presenter, LoadView.Callback, EditorView
                     callback.run();
                 }
 
-                reindexAjaxCall();
+                //reindexAjaxCall();
             }
         });
     }
@@ -337,6 +337,8 @@ public class EditorPresenter implements Presenter, LoadView.Callback, EditorView
 		console.log("Reindex build "+$wnd.reindex);
   	}-*/;
 
+
+    
     
     public static native void reindexAjaxCall() /*-{
 		var links = $wnd.reindex ;

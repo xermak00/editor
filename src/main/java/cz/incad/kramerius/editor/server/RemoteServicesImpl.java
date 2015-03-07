@@ -28,8 +28,10 @@ import cz.incad.kramerius.processes.LRProcessManager;
 import cz.incad.kramerius.relation.RelationUtils;
 import cz.incad.kramerius.service.impl.IndexerProcessStarter;
 import cz.incad.kramerius.utils.DCUtils;
+import cz.incad.kramerius.utils.conf.KConfiguration;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Properties;
@@ -44,6 +46,8 @@ import org.w3c.dom.Document;
  */
 public final class RemoteServicesImpl implements RemoteServices {
 
+    public static Logger LOGGER = Logger.getLogger(RemoteServicesImpl.class.getName());
+    
     private FedoraAccess fedoraAccess;
 //    private DefinitionManager definitionManager;
     
@@ -72,8 +76,13 @@ public final class RemoteServicesImpl implements RemoteServices {
     }
 
     void reindex(String uuid, String title) {
-    	// reindexace je nyni pres ajaxcall primo do k4
-        //IndexerProcessStarter.spawnIndexer(true, title, uuid);
+        try {
+            String editorName = KConfiguration.getInstance().getProperty("k4.editor.user");
+            String editorPswd = KConfiguration.getInstance().getProperty("k4.editor.pswd");
+            IndexerProcessStarter.spawnIndexer(editorName, editorPswd, true, title, uuid);
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(),e);
+        }
     }
 
     

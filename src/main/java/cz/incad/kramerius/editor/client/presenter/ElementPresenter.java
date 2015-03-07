@@ -72,27 +72,26 @@ public class ElementPresenter implements Presenter, ElementView.Callback {
 
 
         display.setModel(ViewUtils.makeLabelVisible(model.getKind().toLocalizedString(), 15));
-        List<String> prohibited = Arrays.asList("title","rootTitle","model","pid","policy");
-        Set<String> keyset = model.getProperties().keySet();
-        List<String> details = new ArrayList<String>();
-        for (String k : keyset) {
-            if (!prohibited.contains(k)) {
-                details.add(model.getProperties().get(k));
-            }
-        }
+//        List<String> prohibited = Arrays.asList("title","rootTitle","model","pid","policy");
+//        
+//        Set<String> keyset = model.getProperties().keySet();
+//        List<String> details = new ArrayList<String>();
+//        for (String k : keyset) {
+//            if (!prohibited.contains(k)) {
+//                details.add(model.getProperties().get(k));
+//            }
+//        }
 
         String rootTitle = model.getProperties().get("rootTitle");
         display.setRootTitle(ViewUtils.makeLabelVisible(rootTitle != null ? rootTitle : "notitle", 15));
-
-        /*
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0,ll=details.size(); i < ll; i++) {
-            if (i > 0) builder.append(",");
-            builder.append(details.get(i));
-        }
+//
+//        StringBuilder builder = new StringBuilder();
+//        for (int i = 0,ll=details.size(); i < ll; i++) {
+//            if (i > 0) builder.append(",");
+//            builder.append(details.get(i));
+//        }
         
-        display.setDetail(builder.toString());
-        */
+        display.setDetail(model.getProperties().get("details"));
      
         String cTitle = model.getProperties().get("constructedTitle");
         if (cTitle != null) {
