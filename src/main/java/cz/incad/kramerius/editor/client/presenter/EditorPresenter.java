@@ -145,8 +145,12 @@ public class EditorPresenter implements Presenter, LoadView.Callback, EditorView
                 return;
             }
         }
+        String localeParam = Window.Location.getParameter("locale");
+        if (localeParam == null && "".equals(localeParam)) {
+            localeParam = "en";
+        }
         // run query
-        dispatcher.execute(new GetKrameriusObjectQuery(pid), new AsyncCallback<GetKrameriusObjectResult>() {
+        dispatcher.execute(new GetKrameriusObjectQuery(pid,localeParam), new AsyncCallback<GetKrameriusObjectResult>() {
 
             @Override
             public void onFailure(Throwable caught) {

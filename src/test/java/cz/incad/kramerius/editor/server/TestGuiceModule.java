@@ -17,10 +17,15 @@
 
 package cz.incad.kramerius.editor.server;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.name.Names;
+
 import cz.incad.kramerius.FedoraAccess;
 import cz.incad.kramerius.relation.RelationService;
+
 import org.easymock.EasyMock;
 
 /**
@@ -31,11 +36,17 @@ public final class TestGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        
         bind(RelationService.class).toInstance(EasyMock.createMock(RelationService.class));
         bind(FedoraAccess.class).annotatedWith(Names.named("rawFedoraAccess"))
                 .toInstance(EasyMock.createMock(FedoraAccess.class));
         bind(RemoteServices.class).toInstance(EasyMock.createMock(RemoteServices.class));
     }
 
+ 
+    @Provides
+    HttpServletRequest getRequest() {
+        return EasyMock.createMock(HttpServletRequest.class);
+    }
     
 }

@@ -20,13 +20,16 @@ package cz.incad.kramerius.editor.server;
 import cz.incad.kramerius.editor.server.HandlerTestUtils.RelationModelBuilder;
 import cz.incad.kramerius.editor.server.HandlerTestUtils.GWTKrameriusObjectBuilder;
 import cz.incad.kramerius.editor.share.GWTKrameriusObject.Kind;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.List;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
+
 import cz.incad.kramerius.FedoraAccess;
 import cz.incad.kramerius.KrameriusModels;
 import cz.incad.kramerius.editor.share.GWTKrameriusObject;
@@ -34,9 +37,13 @@ import cz.incad.kramerius.editor.share.rpc.GetKrameriusObjectQuery;
 import cz.incad.kramerius.editor.share.rpc.GetKrameriusObjectResult;
 import cz.incad.kramerius.relation.RelationModel;
 import cz.incad.kramerius.relation.RelationService;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -45,6 +52,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -58,7 +66,8 @@ public class GetKrameriusObjectQueryHandlerTest {
     private RelationService mockRelationService;
     private FedoraAccess mockFedora;
     private RemoteServices mockRemotes;
-
+    private HttpServletRequest mockRequest;
+    
     public GetKrameriusObjectQueryHandlerTest() {
     }
 
@@ -77,6 +86,7 @@ public class GetKrameriusObjectQueryHandlerTest {
         mockRelationService = injector.getInstance(RelationService.class);
         mockRemotes = injector.getInstance(RemoteServices.class);
         queryHandler = injector.getInstance(GetKrameriusObjectQueryHandler.class);
+        
     }
 
     @After

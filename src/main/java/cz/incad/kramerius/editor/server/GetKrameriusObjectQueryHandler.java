@@ -18,6 +18,7 @@
 package cz.incad.kramerius.editor.server;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.name.Named;
 
 import cz.incad.kramerius.FedoraAccess;
@@ -38,10 +39,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.LocaleUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,15 +66,18 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
     private FedoraAccess fedoraAccess;
     private RemoteServices remotes;
     
+    private Provider<HttpServletRequest> requestProvider;
+    
     @Inject
     public GetKrameriusObjectQueryHandler(
             RelationService dao,
             RemoteServices remotes,
-            @Named("rawFedoraAccess") FedoraAccess fedoraAccess) {
+            @Named("rawFedoraAccess") FedoraAccess fedoraAccess, Provider<HttpServletRequest> reqProvider) {
 
         this.relationsDAO = dao;
         this.fedoraAccess = fedoraAccess;
         this.remotes = remotes;
+        this.requestProvider = reqProvider;
     }
 
     @Override
@@ -89,7 +97,9 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
             Logger.getLogger(GetKrameriusObjectQueryHandler.class.getName()).log(Level.SEVERE, null, ex);
             throw new ActionException(ex);
         }
-        Map<String, Map<String,String>> fetchedProperties = fetchTitles(pidTxt, fetchedRelations);
+        
+        String loc = action.getLocale();
+        Map<String, Map<String,String>> fetchedProperties = fetchTitles(pidTxt, fetchedRelations, loc);
         GetKrameriusObjectResult result = buildResult(pidTxt, fetchedRelations, fetchedProperties);
         return result;
     }
@@ -151,12 +161,18 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
         return rels;
     }
 
-    private Map<String, Map<String,String>> fetchTitles(String pid, RelationModel rels) throws ActionException {
+    private Map<String, Map<String,String>> fetchTitles(String pid, RelationModel rels, String locale) throws ActionException {
         try {
             Map<String, Map<String, String>> result = new HashMap<String, Map<String,String>>();
 
+            
+            Locale loc = LocaleUtils.toLocale(locale);
+            if (loc == null) {
+                loc = Locale.getDefault();
+            }
+
             JSONObject jsonObj = ApiUtilsHelp.item(pid);
-            String constructedTitle = ApiUtilsHelp.constructTitle(jsonObj);
+            String constructedTitle = ApiUtilsHelp.constructTitle(jsonObj, loc);
 
             Map<String, JSONObject> objects = new HashMap<String, JSONObject>();
             JSONArray jsonArr = ApiUtilsHelp.children(pid);

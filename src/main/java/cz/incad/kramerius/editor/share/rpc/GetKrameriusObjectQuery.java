@@ -27,16 +27,25 @@ import net.customware.gwt.dispatch.shared.Action;
 public class GetKrameriusObjectQuery implements Action<GetKrameriusObjectResult> {
 
     private String pid;
+    private String locale;
 
     /* gwt serialization purposes */
     private GetKrameriusObjectQuery() {}
 
-    public GetKrameriusObjectQuery(String pid) {
+    public GetKrameriusObjectQuery(String pid, String locale) {
         this.pid = pid;
+        this.locale = locale;
     }
 
     public String getPID() {
         return pid;
+    }
+    
+    public String getLocale() {
+        if (this.locale == null || this.locale.equals("")) {
+            this.locale = "en";
+        }
+        return locale;
     }
 
 }

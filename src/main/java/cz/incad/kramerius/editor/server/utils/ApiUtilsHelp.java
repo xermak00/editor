@@ -3,6 +3,7 @@ package cz.incad.kramerius.editor.server.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -38,17 +39,27 @@ public class ApiUtilsHelp {
     public static String constructTitle(String pid) {
         try {
             JSONObject jsonObject = item(pid);
-            return constructTitle(jsonObject);
+            return constructTitle(jsonObject, Locale.getDefault());
         } catch (JSONException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             return "";
         }
     }
 
-    public static String constructTitle(JSONObject jsonObject) {
+    public static String constructTitle(String pid, Locale locale) {
+        try {
+            JSONObject jsonObject = item(pid);
+            return constructTitle(jsonObject, locale);
+        } catch (JSONException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            return "";
+        }
+    }
+    
+    public static String constructTitle(JSONObject jsonObject, Locale locale) {
         try {
             ResourceBundle tabs = ResourceBundle
-                    .getBundle("cz/incad/kramerius/editor/server/tabs");
+                    .getBundle("cz/incad/kramerius/editor/server/tabs", locale);
             Map<String, JSONObject> map = new HashMap<String, JSONObject>();
 
             map.put(jsonObject.getString("pid"), jsonObject);

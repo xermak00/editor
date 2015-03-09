@@ -95,9 +95,9 @@ public class ElementPresenter implements Presenter, ElementView.Callback {
      
         String cTitle = model.getProperties().get("constructedTitle");
         if (cTitle != null) {
-            display.setTooltip(model.getKind().toLocalizedString() + ": " + title+" ‣ "+cTitle);
+            display.setTooltip(model.getKind().toLocalizedString() + " (" + title+") ‣ "+cTitle);
         } else {
-            display.setTooltip(model.getKind().toLocalizedString() + ": " + title);
+            display.setTooltip(model.getKind().toLocalizedString() + " (" + title+")");
         }
         display.setOpenEnabled(model.getKind() != Kind.PAGE);
     }
