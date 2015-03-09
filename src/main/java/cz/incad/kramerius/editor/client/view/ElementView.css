@@ -15,6 +15,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+.thumbnail > img {
+    height: 128px;
+}
+
 .thumbnail {
     /*width: 90px;*/
     height: 128px;
