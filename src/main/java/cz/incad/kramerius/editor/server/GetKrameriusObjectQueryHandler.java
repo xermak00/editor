@@ -36,6 +36,7 @@ import cz.incad.kramerius.utils.conf.KConfiguration;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -293,12 +294,15 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
             @Override
             public void details(Map<String, String> map, JSONObject jsonObject) throws JSONException {
 
+                List<String> alist = new ArrayList<String>();
+
                 if (jsonObject.has("issueNumber")){
                     String issueNumber = jsonObject.getString("issueNumber");
                     if (issueNumber != null) {
                         issueNumber = issueNumber.trim();
                         if (!issueNumber.equals("")) {
-                            map.put("issueNumber", issueNumber);
+                            alist.add(issueNumber);
+                            //map.put("issueNumber", issueNumber);
                         }
                     }
                 }
@@ -308,7 +312,8 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
                     if (date != null) {
                         date = date.trim();
                         if (!date.equals("")) {
-                            map.put("date", date);
+                            alist.add(date);
+                            //map.put("date", date);
                         }
                     }
                 }
@@ -318,10 +323,16 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
                     if (partNumber != null) {
                         partNumber = partNumber.trim();
                         if (!partNumber.equals("")) {
-                            map.put("partNumber", partNumber);
+                            alist.add(partNumber);
+                            //map.put("partNumber", partNumber);
                         }
                     }
                 }
+
+                if (!alist.isEmpty()) {
+                    map.put("details", alist.toString());
+                }
+
             }
 
         },
@@ -334,7 +345,7 @@ public final class GetKrameriusObjectQueryHandler implements ActionHandler<GetKr
                     if (year != null) {
                         year = year.trim();
                         if (!year.equals("")) {
-                            map.put("year", year);
+                            map.put("details", Arrays.asList(year).toString());
                         }
                     }
                 }
