@@ -18,11 +18,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <!--
 Delegates login to the search web app.
 -->
+<%@page import="cz.incad.kramerius.utils.ApplicationURL"%>
 <%@page import="cz.incad.kramerius.utils.conf.KConfiguration"%>
 <%
+
+    String aurl = response.encodeURL(ApplicationURL.getServerAndPort(request)+"/search/");
+
     KConfiguration kconfig = KConfiguration.getInstance();
     String query = "welcomeUrl=" + kconfig.getEditorURL();
-    String ssoUrl = kconfig.getApplicationURL()
+    String ssoUrl = aurl
             + "singleSignOn.jsp?" + query;
 
     response.sendRedirect(response.encodeRedirectURL(ssoUrl));
