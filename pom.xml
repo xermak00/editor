@@ -21,7 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses />.
   -->
     <modelVersion>4.0.0</modelVersion>
     <groupId>cz.incad.kramerius</groupId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.1.0</version>
     <artifactId>editor</artifactId>
     <packaging>war</packaging>
     <name>editor</name>
@@ -43,7 +43,7 @@ along with this program. If not, see <http://www.gnu.org/licenses />.
         <postgresql.version>8.4-702.jdbc4</postgresql.version>
         <slf4j.version>1.6.0</slf4j.version>
 	-->
-	<kramerius.version>5.0.2</kramerius.version>
+	<kramerius.version>5.1.0</kramerius.version>
 
         <!-- convenience to define GWT version in one place -->
         <gwt.version>2.4.0</gwt.version>
