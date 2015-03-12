@@ -21,9 +21,10 @@ import cz.incad.kramerius.KrameriusModels;
 import cz.incad.kramerius.editor.share.GWTKrameriusObject.Kind;
 import cz.incad.kramerius.editor.share.InputValidator;
 import cz.incad.kramerius.editor.share.InputValidator.Validator;
+import net.customware.gwt.dispatch.shared.ActionException;
+
 import java.util.EnumMap;
 import java.util.Map;
-import net.customware.gwt.dispatch.shared.ActionException;
 
 /**
  *
@@ -44,6 +45,15 @@ public final class EditorServerUtils {
         mapModel2Kind.put(KrameriusModels.PERIODICALVOLUME, Kind.PERIODICAL_VOLUME);
         mapModel2Kind.put(KrameriusModels.INTERNALPART, Kind.INTERNAL_PART);
         mapModel2Kind.put(KrameriusModels.DONATOR, Kind.DONATOR);
+
+        mapModel2Kind.put(KrameriusModels.ARTICLE, Kind.ARTICLE );
+        mapModel2Kind.put(KrameriusModels.MANUSCRIPT, Kind.MANUSCRIPT);
+        mapModel2Kind.put(KrameriusModels.MAP, Kind.MAP);
+        mapModel2Kind.put(KrameriusModels.GRAPHIC, Kind.GRAPHIC);
+        mapModel2Kind.put(KrameriusModels.SHEETMUSIC, Kind.SHEETMUSIC);
+        mapModel2Kind.put(KrameriusModels.SOUNDRECORDING, Kind.SOUNDRECORDING);
+        mapModel2Kind.put(KrameriusModels.SOUNDUNIT, Kind.SOUNDUNIT);
+        mapModel2Kind.put(KrameriusModels.TRACK, Kind.TRACK);
 
         mapKind2Model = new EnumMap<Kind, KrameriusModels>(Kind.class);
         for (Map.Entry<KrameriusModels, Kind> entry : mapModel2Kind.entrySet()) {

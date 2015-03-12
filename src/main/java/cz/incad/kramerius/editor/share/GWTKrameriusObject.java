@@ -42,8 +42,23 @@ public final class GWTKrameriusObject {
     }
 
     public enum Kind {
-        MONOGRAPH, MONOGRAPH_UNIT, PERIODICAL,
-        PERIODICAL_VOLUME, PERIODICAL_ITEM, PAGE, INTERNAL_PART, DONATOR, ALL;
+        MONOGRAPH,
+        MONOGRAPH_UNIT,
+        PERIODICAL,
+        PERIODICAL_VOLUME,
+        PERIODICAL_ITEM,
+        PAGE,
+        INTERNAL_PART,
+        DONATOR,
+        ARTICLE,
+        MANUSCRIPT,
+        MAP,
+        GRAPHIC,
+        SHEETMUSIC,
+        SOUNDRECORDING,
+        SOUNDUNIT,
+        TRACK,
+        ALL;
 
         public String toLocalizedString() {
             String localizedTxt = this.toString();

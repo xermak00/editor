@@ -19,6 +19,7 @@ package cz.incad.kramerius.editor.client;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.LocalizableResource.Generate;
+
 import java.util.Map;
 
 /**
@@ -52,8 +53,16 @@ public interface EditorConstants extends Constants {
             "PERIODICAL_ITEM", "Issue",
             "PAGE", "Page",
             "INTERNAL_PART", "Internal part",
-            "DONATOR", "Donator"
-    })
+            "DONATOR", "Donator",
+            "ARTICLE", "Article",
+            "MANUSCRIPT", "Manuscript",
+            "MAP", "Map",
+            "GRAPHIC", "Graphic",
+            "SHEETMUSIC", "Sheet music",
+            "SOUNDRECORDING", "Sound recording",
+            "SOUNDUNIT", "Sound unit",
+            "TRACK", "Track"
+            })
     Map<String, String> krameriusObjectKinds();
 
     @DefaultStringMapValue({

@@ -29,7 +29,7 @@ war/rightseditor
 .errai
 .idea
 #/rightseditor/war/rightseditor/
-#/editor/src/main/webapp/kramerius_editor/
+src/main/webapp/kramerius_editor/
 
 #gradle
 *.gradle~
