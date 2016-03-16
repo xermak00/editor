@@ -32,6 +32,8 @@ along with this program. If not, see <http://www.gnu.org/licenses />.
         </license>
     </licenses>
 
+
+
     <properties>
 	<maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
@@ -43,7 +45,7 @@ along with this program. If not, see <http://www.gnu.org/licenses />.
         <postgresql.version>8.4-702.jdbc4</postgresql.version>
         <slf4j.version>1.6.0</slf4j.version>
 	-->
-	<kramerius.version>5.1.0</kramerius.version>
+	<kramerius.version>5.3.1</kramerius.version>
 
         <!-- convenience to define GWT version in one place -->
         <gwt.version>2.4.0</gwt.version>
@@ -96,6 +98,12 @@ along with this program. If not, see <http://www.gnu.org/licenses />.
             <groupId>cz.incad.kramerius</groupId>
             <artifactId>common</artifactId>
             <version>${kramerius.version}</version>
+	    <exclusions>
+              <exclusion>
+		 <groupId>net.sf.ehcache</groupId>
+		 <artifactId>ehcache</artifactId>
+	      </exclusion>
+	   </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
@@ -126,10 +134,12 @@ along with this program. If not, see <http://www.gnu.org/licenses />.
     </dependencies>
 
         <repositories>
-            <repository>
+            
+	    <repository>
               <id>java-net</id>
               <url>http://download.java.net/maven/2/</url>      
             </repository>
+	    
 
             <repository>
               <id>duraspace</id>
@@ -195,6 +205,14 @@ along with this program. If not, see <http://www.gnu.org/licenses />.
               <id>aplikator</id>
               <url>http://aplikator.googlecode.com/svn/mvnrepository</url>      
             </repository>
+
+	    <repository>
+              <id>central</id>
+              <url>http://repo1.maven.org/maven2/</url>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+	    </repository>
 
   </repositories>
 
