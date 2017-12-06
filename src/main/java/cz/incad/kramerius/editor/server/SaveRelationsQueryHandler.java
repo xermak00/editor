@@ -19,7 +19,7 @@ package cz.incad.kramerius.editor.server;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import cz.incad.kramerius.FedoraAccess;
+//import cz.incad.kramerius.FedoraAccess;
 import cz.incad.kramerius.KrameriusModels;
 import cz.incad.kramerius.editor.share.rpc.SaveRelationsQuery;
 import cz.incad.kramerius.editor.share.rpc.SaveRelationsQuery.RelationHandle;
@@ -49,17 +49,17 @@ import net.customware.gwt.dispatch.shared.DispatchException;
 public final class SaveRelationsQueryHandler implements ActionHandler<SaveRelationsQuery, SaveRelationsResult> {
     private RelationService relationsDAO;
     private RemoteServices remotes;
-    private FedoraAccess fedoraAccess;
+    //private FedoraAccess fedoraAccess;
 
     @Inject
     public SaveRelationsQueryHandler(
             RelationService dao,
-            RemoteServices remotes,
-            @Named("rawFedoraAccess") FedoraAccess fedoraAccess) {
+            RemoteServices remotes
+            /*@Named("rawFedoraAccess") FedoraAccess fedoraAccess*/) {
 
         this.relationsDAO = dao;
         this.remotes = remotes;
-        this.fedoraAccess = fedoraAccess;
+        //this.fedoraAccess = fedoraAccess;
     }
 
     @Override

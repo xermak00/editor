@@ -85,7 +85,7 @@ public class GetSuggestionQueryHandlerTest {
     @Test
     public void testBuildSolrQuery() throws Exception {
         SolrSuggestionQuery query = new SolrSuggestionQuery();
-        String exp = "http://localhost:8080/solr/select"
+        String exp = "http://localhost:8983/solr/kramerius/select"
                 + "?q=dc.title:d*%20-fedora.model:page"
                 + "&fl=PID,root_title,dc.title,fedora.model,score"
                 + "&wt=xml"

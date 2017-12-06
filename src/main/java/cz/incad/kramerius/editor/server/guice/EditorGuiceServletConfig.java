@@ -21,6 +21,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
+import cz.incad.kramerius.fedora.RepoModule;
+import cz.incad.kramerius.resourceindex.ResourceIndexModule;
+import cz.incad.kramerius.solr.SolrModule;
+import cz.incad.kramerius.statistics.NullStatisticsModule;
 
 /**
  *
@@ -30,7 +34,7 @@ public class EditorGuiceServletConfig extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(new EditorGuiceModule(), new ServletModule());
+        return Guice.createInjector(new SolrModule(), new ResourceIndexModule(), new EditorGuiceModule(), new ServletModule(),new NullStatisticsModule());
     }
 
 }

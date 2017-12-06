@@ -45,7 +45,7 @@ along with this program. If not, see <http://www.gnu.org/licenses />.
         <postgresql.version>8.4-702.jdbc4</postgresql.version>
         <slf4j.version>1.6.0</slf4j.version>
 	-->
-	<kramerius.version>5.3.3</kramerius.version>
+        <kramerius.version>6.0.0-alpha</kramerius.version>
 
         <!-- convenience to define GWT version in one place -->
         <gwt.version>2.4.0</gwt.version>
