@@ -77,8 +77,8 @@ public final class RemoteServicesImpl implements RemoteServices {
 
     void reindex(String uuid, String title) {
         try {
-            String editorName = KConfiguration.getInstance().getProperty("k4.editor.user");
-            String editorPswd = KConfiguration.getInstance().getProperty("k4.editor.pswd");
+            String editorName = System.getenv("k4.editor.user");
+            String editorPswd = System.getenv("k4.editor.pswd");
             IndexerProcessStarter.spawnIndexer(editorName, editorPswd, true, title, uuid);
         } catch (UnsupportedEncodingException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(),e);
