@@ -1,0 +1,207 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:latest.release"
+        classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
+    }
+}
+
+group 'editor'
+version '5.1.1'
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'gwt'
+apply plugin: 'at.bxm.svntools'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+def krameriusGithubUrl = 'https://github.com/moravianlibrary/kramerius/trunk'
+def krameriusModulesPath = 'kramerius_modules'
+def gwtVersion = '2.4.0'
+def guiceVersion = '3.0'
+
+war {
+    archiveName = 'editor.war'
+}
+
+gwt {
+    gwtVersion = '2.4.0'
+    modules 'cz.incad.kramerius.editor.Editor'
+}
+
+configurations {
+    provided
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+        test.compileClasspath += configurations.provided
+        test.runtimeClasspath += configurations.provided
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+
+    maven {
+        url 'http://download.java.net/maven/2/'
+    }
+
+    maven {
+        url 'http://m2.duraspace.org/content/repositories/releases'
+    }
+
+    maven {
+        url 'https://maven.java.net/content/repositories/snapshots'
+    }
+
+    maven {
+        url 'http://guiceyfruit.googlecode.com/svn/repo/releases'
+    }
+
+    maven {
+        url 'http://guiceyfruit.googlecode.com/svn/repo/releases'
+    }
+
+    maven {
+        url 'http://jsdoctk-plugin.googlecode.com/svn/repo'
+    }
+
+    maven {
+        url 'http://repository.springsource.com/maven/bundles/external'
+    }
+
+    maven {
+        url 'https://repository.jboss.org/nexus/content/repositories/thirdparty-releases'
+    }
+
+    maven {
+        url 'http://download.osgeo.org/webdav/geotools'
+    }
+
+    maven {
+        url 'http://repo.jfrog.org/artifactory/libs-releases'
+    }
+
+    maven {
+        url 'https://maven.atlassian.com/content/groups/public'
+    }
+
+    maven {
+        url 'http://jbig2-imageio.googlecode.com/svn/maven-repository'
+    }
+
+    maven {
+        url 'http://kramerius.googlecode.com/svn/mvnrepo'
+    }
+}
+
+dependencies {
+    runtime "com.google.gwt:gwt-servlet:${gwtVersion}"
+    providedCompile "javax.servlet.jsp:jsp-api:2.1"
+    providedCompile "javax.servlet:servlet-api:2.5"
+    providedCompile "com.google.gwt:gwt-dev:${gwtVersion}"
+    providedCompile "com.google.gwt:gwt-user:${gwtVersion}"
+
+    compile fileTree(dir: "kramerius_modules/common/build/libs", include: "*.jar")
+    compile fileTree(dir: "kramerius_modules/fedora-api/build/libs", include: "*.jar")
+    compile fileTree(dir: "kramerius_modules/security-core/build/libs", include: "*.jar")
+
+    testCompile "junit:junit:4.7"
+    testCompile "org.easymock:easymock:3.0"
+
+    compile "org.json:json:20140107"
+    compile "commons-io:commons-io:2.3"
+    compile "com.google.gwt.inject:gin:1.0"
+    compile "org.antlr:stringtemplate:3.2.1"
+    compile "com.sun.jersey:jersey-json:1.17.1"
+    compile "org.codehaus.jettison:jettison:1.1"
+    compile "net.sf.json-lib:json-lib:2.3:jdk15"
+    compile "com.google.code.findbugs:jsr305:1.3.9"
+    compile "com.allen-sauer.gwt.dnd:gwt-dnd:3.1.2"
+    compile "com.google.inject:guice:${guiceVersion}"
+    compile "org.apache.ws.commons.axiom:axiom-api:1.2.14"
+    compile "org.apache.ws.commons.axiom:axiom-impl:1.2.14"
+    compile "net.customware.gwt.dispatch:gwt-dispatch:1.1.0"
+    compile "commons-configuration:commons-configuration:1.6"
+    compile "com.sun.jersey.contribs:jersey-apache-client:1.17.1"
+    compile "com.google.inject.extensions:guice-servlet:${guiceVersion}"
+}
+
+task exportBuildSrc(type: at.bxm.gradleplugins.svntools.tasks.SvnExport) {
+    svnUrl = "${krameriusGithubUrl}/buildSrc"
+    targetDir = "${krameriusModulesPath}/buildSrc"
+}
+
+task exportFedoraApi(type: at.bxm.gradleplugins.svntools.tasks.SvnExport) {
+    svnUrl = "${krameriusGithubUrl}/fedora-api"
+    targetDir = "${krameriusModulesPath}/fedora-api"
+}
+
+task exportCommon(type: at.bxm.gradleplugins.svntools.tasks.SvnExport) {
+    svnUrl = "${krameriusGithubUrl}/common"
+    targetDir = "${krameriusModulesPath}/common"
+}
+
+task exportSecurityCore(type: at.bxm.gradleplugins.svntools.tasks.SvnExport) {
+    svnUrl = "${krameriusGithubUrl}/security-core"
+    targetDir = "${krameriusModulesPath}/security-core"
+}
+
+//-- Build libraries with original configurations from Kramerius Github repo --//
+
+task exportBuild(type: at.bxm.gradleplugins.svntools.tasks.SvnExport,
+        dependsOn: exportCommon) {
+
+    svnUrl = "${krameriusGithubUrl}/build.gradle"
+    targetDir = "${krameriusModulesPath}/build.gradle"
+}
+
+task exportSettings(type: at.bxm.gradleplugins.svntools.tasks.SvnExport,
+        dependsOn: exportCommon) {
+
+    svnUrl = "${krameriusGithubUrl}/settings.gradle"
+    targetDir = "${krameriusModulesPath}/settings.gradle"
+}
+
+//----------------------------------------------------------------------------//
+
+task exportGradleSettings(dependsOn: [exportBuild, exportSettings]) << {
+    println("exportSettings: done")
+}
+
+task exportAll(dependsOn: [exportCommon, exportFedoraApi, exportBuildSrc,
+                           exportSecurityCore, exportGradleSettings]) << {
+    println("exportAll: done")
+}
+
+task buildModules(type: GradleBuild) {
+    dir = "${krameriusModulesPath}"
+    setTasks([':fedora-api:jar', ':security-core:jar', ':common:jar'])
+}
+
+if (!(new File("${krameriusModulesPath}").exists())) {
+    buildModules.dependsOn(exportAll)
+}
+
+task prepareModules(dependsOn: buildModules) << {
+    println("prepareModules: done")
+}
+
+compileJava.dependsOn prepareModules
+
+clean.doFirst {
+    delete "${krameriusModulesPath}"
+}
