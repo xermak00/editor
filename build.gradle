@@ -24,7 +24,7 @@ apply plugin: 'at.bxm.svntools'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-def krameriusGithubUrl = 'https://github.com/moravianlibrary/kramerius/trunk'
+def krameriusGithubUrl = 'https://github.com/ceskaexpedice/kramerius/trunk'
 def krameriusModulesPath = 'kramerius_modules'
 def gwtVersion = '2.4.0'
 def guiceVersion = '3.0'
